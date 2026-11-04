@@ -1,0 +1,2 @@
+- name: Import playbooks
+  ansible.builtin.import_playbook: test.yaml

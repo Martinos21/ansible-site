@@ -1,0 +1,14 @@
+- name: Install neco
+  hosts: kili
+  become: true
+
+  tasks:
+    - name: Add EPEL repository
+      ansible.builtin.dnf:
+        name: epel-release
+        state: present
+
+    - name: Install cowsay
+      ansible.builtin.dnf:
+        name: cowsay
+        state: present
