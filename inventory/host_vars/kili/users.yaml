@@ -1,0 +1,4 @@
+username: kili
+
+keystores:
+  - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHert7vqfe7/07d+SESJn0ylLHFb3YNV9gWzqRsPFY3M d@MacBook-Air.local

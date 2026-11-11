@@ -1,0 +1,28 @@
+---
+- name: Správa mého uživatele a jeho SSH klíčů
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Kontrola, že je definován uživatel a aspoň jeden SSH klíč (ochrana proti odstřižení)
+      ansible.builtin.assert:
+        that:
+          - username is defined
+          - username | length > 0
+          - keystores is defined
+          - keystores | length > 0
+        fail_msg: "Chybí my_user_name nebo my_user_ssh_keys"
+        quiet: true
+
+    - name: Uživatel {{ username }} existuje
+      ansible.builtin.user:
+        name: "{{ username }}"
+        state: present
+        update_password: on_create
+
+    - name: Autorizované SSH klíče pro {{ username }}
+      ansible.posix.authorized_key:
+        user: "{{ username }}"
+        key: "{{ keystores | join('\n') }}"
+        state: present
+        exclusive: true
