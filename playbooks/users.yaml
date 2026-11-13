@@ -4,7 +4,7 @@
   become: true
 
   tasks:
-    - name: Kontrola, že je definován uživatel a aspoň jeden SSH klíč (ochrana proti odstřižení)
+    - name: Kontrola, že je definován uživatel a aspoň jeden SSH klíč
       ansible.builtin.assert:
         that:
           - username is defined
