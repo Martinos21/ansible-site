@@ -9,9 +9,9 @@
         that:
           - username is defined
           - username | length > 0
-          - keystores is defined
-          - keystores | length > 0
-        fail_msg: "Chybí my_user_name nebo my_user_ssh_keys"
+          - sshkey is defined
+          - sshkey | length > 0
+        fail_msg: "Chybí username nebo sshkey"
         quiet: true
 
     - name: Uživatel {{ username }} existuje
@@ -23,6 +23,6 @@
     - name: Autorizované SSH klíče pro {{ username }}
       ansible.posix.authorized_key:
         user: "{{ username }}"
-        key: "{{ keystores | join('\n') }}"
+        key: "{{ sshkey | join('\n') }}"
         state: present
         exclusive: true
