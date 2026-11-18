@@ -8,7 +8,7 @@
     samba_workgroup: WORKGROUP
     samba_user: smbuser
     samba_group: smbusers
-    samba_tul_network: 147.230.0.0/16
+    samba_tul_network: "2001:718:1c01::/48"
 
     samba_shares:
       - name: data
@@ -61,12 +61,12 @@
         state: started
         enabled: true
 
-    - name: Firewall – port Samby jen pro síť TUL
-      community.general.ufw:
-        rule: allow
-        src: "{{ samba_tul_network }}"
-        port: "445"
-        proto: tcp
+    - name: Firewall – Samba jen pro síť TUL
+      ansible.posix.firewalld:
+          rich_rule: 'rule family="ipv4" source address="{{ samba_tul_network }}" service name="samba" accept'
+          permanent: true
+          immediate: true
+          state: enabled
 
   handlers:
     - name: Restart smbd
