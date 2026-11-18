@@ -24,10 +24,9 @@
 
   tasks:
     - name: Instalace Samby
-      ansible.builtin.apt:
+      ansible.builtin.dnf:
         name: samba
         state: present
-        update_cache: true
 
     - name: Skupina pro Sambu
       ansible.builtin.group:
