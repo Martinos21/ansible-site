@@ -1,7 +1,7 @@
 ---
 # Heslo se nastavuje ručně na serveru:  sudo smbpasswd -a smbuser
 - name: Samba server
-  hosts: samba
+  hosts: kili
   become: true
 
   vars:
