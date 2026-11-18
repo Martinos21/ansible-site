@@ -7,3 +7,6 @@
 
 - name: Import users
   ansible.builtin.import_playbook: playbooks/users.yaml
+
+- name: Handle Samba
+  ansible.builtin.import_playbook: playbooks/samba.yaml
