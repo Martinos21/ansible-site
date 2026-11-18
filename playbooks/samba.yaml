@@ -1,0 +1,76 @@
+---
+# Heslo se nastavuje ručně na serveru:  sudo smbpasswd -a smbuser
+- name: Samba server
+  hosts: samba
+  become: true
+
+  vars:
+    samba_workgroup: WORKGROUP
+    samba_user: smbuser
+    samba_group: smbusers
+    samba_tul_network: 147.230.0.0/16
+
+    samba_shares:
+      - name: data
+        path: /srv/samba/data
+        options:
+          read only: false
+          valid users: "@{{ samba_group }}"
+      - name: public
+        path: /srv/samba/public
+        options:
+          read only: true
+          guest ok: true
+
+  tasks:
+    - name: Instalace Samby
+      ansible.builtin.apt:
+        name: samba
+        state: present
+        update_cache: true
+
+    - name: Skupina pro Sambu
+      ansible.builtin.group:
+        name: "{{ samba_group }}"
+
+    - name: Uživatel jen pro Sambu (bez home, bez shellu)
+      ansible.builtin.user:
+        name: "{{ samba_user }}"
+        group: "{{ samba_group }}"
+        shell: /usr/sbin/nologin
+        create_home: false
+
+    - name: Adresáře sdílených složek
+      ansible.builtin.file:
+        path: "{{ item.path }}"
+        state: directory
+        group: "{{ samba_group }}"
+        mode: "2775"
+      loop: "{{ samba_shares }}"
+
+    - name: Konfigurace Samby
+      ansible.builtin.template:
+        src: templates/smb.conf.j2
+        dest: /etc/samba/smb.conf
+        mode: "0644"
+        validate: testparm -s %s
+      notify: Restart smbd
+
+    - name: Samba běží a startuje po bootu
+      ansible.builtin.service:
+        name: smbd
+        state: started
+        enabled: true
+
+    - name: Firewall – port Samby jen pro síť TUL
+      community.general.ufw:
+        rule: allow
+        src: "{{ samba_tul_network }}"
+        port: "445"
+        proto: tcp
+
+  handlers:
+    - name: Restart smbd
+      ansible.builtin.service:
+        name: smbd
+        state: restarted

@@ -1,0 +1,14 @@
+{{ ansible_managed | comment }}
+
+[global]
+   workgroup = {{ samba_workgroup }}
+   server role = standalone server
+   map to guest = bad user
+{% for share in samba_shares %}
+
+[{{ share.name }}]
+   path = {{ share.path }}
+{% for key, value in share.options.items() %}
+   {{ key }} = {{ ('yes' if value else 'no') if value is boolean else value }}
+{% endfor %}
+{% endfor %}
