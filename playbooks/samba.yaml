@@ -63,7 +63,7 @@
 
     - name: Firewall – Samba jen pro síť TUL
       ansible.posix.firewalld:
-          rich_rule: 'rule family="ipv4" source address="{{ samba_tul_network }}" service name="samba" accept'
+          rich_rule: 'rule family="ipv6" source address="{{ samba_tul_network }}" service name="samba" accept'
           permanent: true
           immediate: true
           state: enabled
