@@ -53,7 +53,7 @@
         dest: /etc/samba/smb.conf
         mode: "0644"
         validate: testparm -s %s
-      notify: Restart smbd
+      notify: Restart smb
 
     - name: Samba běží a startuje po bootu
       ansible.builtin.service:
