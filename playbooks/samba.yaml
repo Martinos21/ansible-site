@@ -57,7 +57,7 @@
 
     - name: Samba běží a startuje po bootu
       ansible.builtin.service:
-        name: smbd
+        name: smb
         state: started
         enabled: true
 
